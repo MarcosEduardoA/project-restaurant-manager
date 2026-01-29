@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Restaurant Marcos</title>
+	
+	<link type="text/css" rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+	<header>
+		<h1>Restaurant Manager</h1>
+		
+		<p>The best way to administrate your bussines</p>
+		
+	</header>
+	
+	<nav class="pages-nav">
+		<a href="stock-manager">Stock</a>
+		<a href="#">Recipe</a>
+		<a href="#">Gain</a>
+		<a href="#">Expenses</a>
+		<a href="discount-manager">Discount</a>
+	</nav>
+	
+	<div>
+		<span th:text="${msg}" class="msg"></span>
+	</div>
+	
+	<main id="main-sale">
+	
+		<form id="form-items" class="form-default" action="add-item" method="post" th:object="${item}">
+			<div class="row">
+			
+				<label class="label-default">Items:</label>
+				<select th:field="*{product}" class="select-default"> 
+					<option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">
+				</select>
+				
+				<label for="quantity" class="label-default">Quantity:</label>
+				<input id="quantity" name="quantity" class="input-default" th:field="*{quantity}" type="number" placeholder="Inform the quantity to sale">
+			</div>
+			
+			<div class="row">
+				<label for="unitPrice" class="label-default">Unit Price:</label>
+				<input id="unitPrice" name="unitPrice" class="input-default" th:field="*{unitPrice}" type="number"> 
+				
+				<label for="totalPrice" class="label-default">Total Price:</label>
+				<input id="totalPrice" name="totalPrice" class="input-default" th:field="*{totalPrice}" type="number" readonly="readonly">
+			</div>
+			
+			<div class="row">
+				<button type="submit" class="button-default">Add</button>
+			</div>
+		</form>
+		
+		<form id="form-sale" action="save-sale" class="form-default" method="post" th:object="${sale}">
+			
+			<div class="row">
+				<label for="requestNumber" class="label-default">Request Number:</label>
+				<input id="requestNumber" name="requestNumber" class="input-default" th:field="*{requestNumber}" type="text" placeholder="Inform the request number">
+			
+				<label for="saleDate" class="label-default">Sale Date:</label>
+				<input id="saleDate" name="saleDate" class="input-default" th:field="*{saleDate}" type="date">
+			</div>
+			
+			<div class="row">
+				<label for="totalValue" class="label-default">Total Value:</label>
+				<input id="totalValue" name="totalValue" class="input-default" th:field="*{totalValue}" type="number" readonly="readonly">
+			
+			
+				<label for="discout" class="label-default">Discount:</label>
+				<select id="discout" name="discout" class="select-default" th:field="*{discount}">
+					<option label="Select a discount" value="">
+					<option th:each="d : ${discounts}" th:value="${d.id}" th:text="${d.name}">
+				</select>
+			</div>
+			
+			<div class="row">
+				<label for="serviceTax" class="label-default">Service Tax:</label>
+				<input id="serviceTax" name="serviceTax" class="input-default" th:field="*{serviceTax}" type="number">
+				
+				<label for="payment" class="label-default">Payment:</label>
+				<select id="payment" name="payment" class="select-default" th:field="*{payment}">
+					<option th:each="p : ${T(br.com.restaurant.manager.model.Payment).values()}" th:value="${p}" th:text="${p.value}">
+				</select>
+			</div>
+			
+			<div class="row">
+				<label for="status" class="label-default">Status:</label>
+				<select id="status" name="status" class="select-default" th:field="*{status}">
+					<option th:each="s : ${T(br.com.restaurant.manager.model.Status).values()}" th:value="${s}" th:text="${s.value}">
+				</select>
+				
+				<label id="observation" class="label-default">Observation:</label>
+				<input id="observation" name="observation" class="input-default" type="text" th:field="*{observation}" placeholder="Infom the sale proccess">
+			</div>
+			
+			<div class="row">
+				<button value="save" id="save-sale-button" class="button-default" type="submit">Save</button>
+			</div>
+			 
+		</form>
+	</main>
+	
+</body>
+</html>

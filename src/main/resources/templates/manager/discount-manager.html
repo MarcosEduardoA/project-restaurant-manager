@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+
+	<meta charset="UTF-8">
+	<title>Discount Manager</title>
+	
+	<link type="text/css" rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+	
+	<header id="header-discount">
+		
+		<h1>Discount Manager</h1>
+		
+	</header>
+	
+	<nav class="pages-nav">
+		<a href="sale-manager">Sale</a>
+		<a href="stock-manager">Stock</a>
+	</nav>
+	
+	<div>
+		<span th:text="${msg}"></span>
+	</div>
+	
+	<main id="main-discount">
+		
+		<form id="form-discount" class="form-default" action="save-discount" method="post" th:object="${discount}">
+			
+			<div class="row">
+				<label for="name" class="label-default">Discount name:</label>
+				<input id="name" name="name" class="input-default" type="text" th:field="*{name}" placeholder="Inform the discount name">
+			</div>
+			
+			<div class="row">
+				<label for="type" class="label-default">Type:</label>
+				<select id="type" name="type" class="select-default" th:field="*{type}">
+					<option th:each="d : ${T(br.com.restaurant.manager.model.DiscountType).values()}" th:value="${d}" th:text="${d.value}">
+				</select>
+			</div>
+			
+			<div class="row">
+				<label for="value" class="label-default">Value:</label>
+				<input id="value" name="value" class="input-default" type="number" th:field="*{value}">
+			</div>
+			
+			<div class="row">
+				<label for="active" class="label-default">Active:</label>
+				<select id="active" name="active" class="select-default" th:field="*{active}">
+					<option label="Yes" value="true"/>
+					<option label="No" value="false"/>
+				</select>
+			</div>
+			
+			<div class="row">
+				<label for="startDate" class="label-default">Start Date:</label>
+				<input id="startDate" name="startDate" class="input-default" type="date" th:field="*{startDate}">
+			</div>
+			
+			<div class="row">
+				<label for="finalDate" class="label-default">Final Date:</label>
+				<input id="finalDate" name="finalDate" class="input-default" type="date" th:field="*{finalDate}">
+			</div>
+			
+			<div class="row">
+				<button value="save" id="save-discount-button" type="submit" class="button-default">Save</button>
+			</div>
+		</form>
+		
+	</main>
+	
+</body>
+</html>

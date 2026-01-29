@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Stock Manager</title>
+	
+	<link type="text/css" rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+	
+	<header id="header-stock">
+		<h1>Stock Manager</h1>
+		
+	</header>
+	
+	<nav class="pages-nav">
+		<a href="sale-manager">Sale</a>
+		<a href="#">Recipe</a>
+		<a href="#">Gain</a>
+		<a href="#">Expenses</a>
+		<a href="discount-manager">Discount</a>
+	</nav>
+	
+	<div>
+		<span th:text="${msg}"></span>
+	</div>
+	
+	<main id="main-stock-manager">
+		<form id="form-stock-manager" class="form-default" action="add-stock" method="post" th:object="${product}">
+			
+			<div class="row">
+				<label for="name" class="label-default">Name:</label>
+				<input id="name" name="name" class="input-default" th:field="*{name}" type="text" placeholder="Inform the product name">
+			</div>
+			
+			<div class="row">
+				<label for="price" class="label-default">Price:</label>
+				<input id="price" name="price" class="input-default" th:field="*{price}" type="number">
+			</div>
+			
+			<div class="row">
+				<label for="stockQuantity" class="label-default">Stock Quantity:</label>
+				<input id="stockQuantity" name="stockQuantity" class="input-default" th:field="*{stockQuantity}" type="number">
+			</div>
+			
+			<div class="row">
+				<button value="add" id="add-stock-button" type="submit" class="button-default">Add</button>
+			</div>
+			
+		</form>
+	</main>
+	
+	
+</body>
+</html>
