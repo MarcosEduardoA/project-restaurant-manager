@@ -78,7 +78,10 @@
 			
 			<div class="row">
 				<label for="serviceTax" class="label-default">Service Tax:</label>
-				<input id="serviceTax" name="serviceTax" class="input-default" th:field="*{serviceTax}" type="number">
+				<select id="serviceTax" name="serviceTax" class="select-default" th:field="*{serviceTax}">
+					<option label="Select the service tax" value="">
+					<option label="10%" value="10">
+				</select>
 				
 				<label for="payment" class="label-default">Payment:</label>
 				<select id="payment" name="payment" class="select-default" th:field="*{payment}">

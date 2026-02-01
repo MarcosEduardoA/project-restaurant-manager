@@ -88,7 +88,7 @@ nav a:hover {
 
 .input-default {
 	margin: 5px;
-	padding: 5px;
+	padding: 5px 15px;
 	min-width: 95%;
 	border-radius: 5px;
 	border-color: var(--color3);
@@ -98,8 +98,8 @@ nav a:hover {
 
 .select-default {
 	margin: 5px;
-	padding: 5px;
-	min-width: 97%;
+	padding: 5px 15px;
+	min-width: 98%;
 	border-radius: 5px;
 	border-color: var(--color3);
 	border-style: solid;

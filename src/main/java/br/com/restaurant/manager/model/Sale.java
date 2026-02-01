@@ -42,7 +42,7 @@ public class Sale implements Serializable {
 	@JoinColumn(name = "discount_id")
 	private Discount discount;
 	
-	private BigDecimal serviceTax;
+	private Integer serviceTax;
 	
 	@Enumerated(EnumType.STRING)
 	private Payment payment;
@@ -59,21 +59,26 @@ public class Sale implements Serializable {
 			itemsTotalPrice += i.getTotalPrice().doubleValue();
 		}
 		
-		Double totalPrice = 0.0;
+		Double totalPrice = itemsTotalPrice;
 		if (discount != null) {
 			if (discount.getType().equals(DiscountType.PERCENTAGE)) {
 				Double percentage = discount.getValue().doubleValue() / 100;
-				totalPrice = itemsTotalPrice - itemsTotalPrice * percentage;
+				totalPrice -= itemsTotalPrice * percentage;
 			}
 			else if (discount.getType().equals(DiscountType.FIXED)) {
-				totalPrice = itemsTotalPrice - discount.getValue().doubleValue();
+				totalPrice -= discount.getValue().doubleValue();
 			}
 		}
-		else {
-			totalPrice = itemsTotalPrice;
+		
+		if (serviceTax != null) {
+			totalPrice += totalPrice * (serviceTax.doubleValue() / 100);
+			System.out.println(serviceTax / 100);
+			System.out.println(totalPrice);
 		}
 		
-		return BigDecimal.valueOf(totalPrice + getServiceTax().doubleValue());
+		System.out.println(totalPrice);
+		
+		return BigDecimal.valueOf(totalPrice);
 	}
 
 	public Long getId() {
@@ -124,11 +129,11 @@ public class Sale implements Serializable {
 		this.discount = discount;
 	}
 	
-	public BigDecimal getServiceTax() {
+	public Integer getServiceTax() {
 		return serviceTax;
 	}
 
-	public void setServiceTax(BigDecimal serviceTax) {
+	public void setServiceTax(Integer serviceTax) {
 		this.serviceTax = serviceTax;
 	}
 
