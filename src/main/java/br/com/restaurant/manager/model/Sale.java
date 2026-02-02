@@ -72,11 +72,7 @@ public class Sale implements Serializable {
 		
 		if (serviceTax != null) {
 			totalPrice += totalPrice * (serviceTax.doubleValue() / 100);
-			System.out.println(serviceTax / 100);
-			System.out.println(totalPrice);
 		}
-		
-		System.out.println(totalPrice);
 		
 		return BigDecimal.valueOf(totalPrice);
 	}

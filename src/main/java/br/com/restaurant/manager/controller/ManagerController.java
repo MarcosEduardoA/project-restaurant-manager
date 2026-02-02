@@ -1,6 +1,5 @@
 package br.com.restaurant.manager.controller;
 
-import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,11 +16,14 @@ import br.com.restaurant.manager.model.Sale;
 import br.com.restaurant.manager.repository.DiscountRepository;
 import br.com.restaurant.manager.repository.ProductRepository;
 import br.com.restaurant.manager.repository.SaleRepository;
+import br.com.restaurant.manager.service.SaleService;
 
 @Controller
 @RequestMapping("/manager")
 @SessionAttributes("sale")
 public class ManagerController {
+	
+	private final SaleService saleService;
 	
 	@Autowired
 	private SaleRepository saleRepository;
@@ -31,6 +33,10 @@ public class ManagerController {
 	
 	@Autowired
 	private DiscountRepository discountRepository;
+	
+	public ManagerController(SaleService saleService) {
+		this.saleService = saleService;
+	}
 	
 	@GetMapping("/sale-manager")
 	public ModelAndView init() {
@@ -68,10 +74,7 @@ public class ManagerController {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
-		item.setSale(sale);
-		item.setTotalPrice(BigDecimal.valueOf(item.getUnitPrice().doubleValue() * item.getQuantity()));
-		sale.getItems().add(item);
-		
+		saleService.addItem(sale, item);
 		modelAndView.addObject("item", new Item());
 		modelAndView.addObject("products", productRepository.findAll());
 		modelAndView.addObject("discounts", discountRepository.findAll());
