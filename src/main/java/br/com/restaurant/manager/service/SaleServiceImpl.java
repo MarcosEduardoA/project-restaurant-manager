@@ -1,6 +1,7 @@
 package br.com.restaurant.manager.service;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,23 @@ public class SaleServiceImpl implements SaleService {
 		sale.getItems().add(item);
 		
 		return sale;
+	}
+
+	@Override
+	public BigDecimal calculateTotal(Sale sale) {
+		
+		BigDecimal total = sale.getItems().stream().map(Item::getTotalPrice)
+				.filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+		
+		
+		if (sale.getServiceTax() != null) {
+			BigDecimal serviceTaxValue = total.multiply(BigDecimal.valueOf
+					(sale.getServiceTax()).divide(BigDecimal.valueOf(100)));
+			
+			total = total.add(serviceTaxValue);
+		}
+		
+		return total;
 	}
 
 	
