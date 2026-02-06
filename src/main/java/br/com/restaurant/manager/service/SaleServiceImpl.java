@@ -5,6 +5,8 @@ import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
+import br.com.restaurant.manager.model.Discount;
+import br.com.restaurant.manager.model.DiscountType;
 import br.com.restaurant.manager.model.Item;
 import br.com.restaurant.manager.model.Sale;
 
@@ -30,12 +32,30 @@ public class SaleServiceImpl implements SaleService {
 		BigDecimal total = sale.getItems().stream().map(Item::getTotalPrice)
 				.filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
 		
+		if (sale.getDiscount() != null) {
+			total = applyDiscount(total, sale.getDiscount());
+		}
 		
 		if (sale.getServiceTax() != null) {
 			BigDecimal serviceTaxValue = total.multiply(BigDecimal.valueOf
 					(sale.getServiceTax()).divide(BigDecimal.valueOf(100)));
 			
 			total = total.add(serviceTaxValue);
+		}
+		
+		return total;
+	}
+
+	@Override
+	public BigDecimal applyDiscount(BigDecimal total, Discount discount) {
+		
+		if (discount.getType().equals(DiscountType.PERCENTAGE)) {
+			total = total.subtract(total.multiply(discount.getValue().divide(BigDecimal.valueOf(100))));
+			System.out.println(total.multiply(discount.getValue().divide(BigDecimal.valueOf(100))));
+		}
+		else if (discount.getType().equals(DiscountType.FIXED)) {
+			total = total.subtract(discount.getValue());
+			System.out.println(discount.getValue());
 		}
 		
 		return total;
