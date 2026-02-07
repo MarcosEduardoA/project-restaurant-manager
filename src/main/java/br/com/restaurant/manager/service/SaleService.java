@@ -13,4 +13,6 @@ public interface SaleService {
 	BigDecimal calculateTotal(Sale sale);
 	
 	BigDecimal applyDiscount(BigDecimal total, Discount discount);
+	
+	Sale createSale(Sale sale);
 }

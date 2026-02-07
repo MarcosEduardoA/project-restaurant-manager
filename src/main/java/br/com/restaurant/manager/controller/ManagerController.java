@@ -57,10 +57,10 @@ public class ManagerController {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
-		//sale.setTotalValue(sale.calculateTotalValue()); // Calcula valor total da venda
-		sale.setTotalValue(saleService.calculateTotal(sale));
-		saleRepository.save(sale); // Salva a venda
+		saleService.createSale(sale);  // Salva a venda
+		
 		sessionStatus.setComplete(); // Limpa a sessão
+		
 		modelAndView.addObject("sale", new Sale()); // Limpa o objeto de venda
 		modelAndView.addObject("msg", "Saved successfully!"); // Emite a mensagem de sucesso
 		modelAndView.addObject("products", productRepository.findAll()); // Carrega todos os produtos

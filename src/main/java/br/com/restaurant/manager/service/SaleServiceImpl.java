@@ -4,14 +4,32 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.restaurant.manager.model.Discount;
 import br.com.restaurant.manager.model.DiscountType;
 import br.com.restaurant.manager.model.Item;
 import br.com.restaurant.manager.model.Sale;
+import br.com.restaurant.manager.repository.SaleRepository;
 
 @Service
+@Transactional
 public class SaleServiceImpl implements SaleService {
+	
+	private final SaleRepository saleRepository;
+	
+	public SaleServiceImpl(SaleRepository saleRepository) {
+		this.saleRepository = saleRepository;
+	}
+	
+	@Override
+	public Sale createSale(Sale sale) {
+		
+		BigDecimal total = calculateTotal(sale);
+		sale.setTotalValue(total);
+		
+		return saleRepository.save(sale);
+	}
 	
 	@Override
 	public Sale addItem(Sale sale, Item item) { /*Adiciona items na lista do Sale*/
@@ -29,6 +47,7 @@ public class SaleServiceImpl implements SaleService {
 	@Override
 	public BigDecimal calculateTotal(Sale sale) {
 		
+		// Pega o valor total somado de todos os items
 		BigDecimal total = sale.getItems().stream().map(Item::getTotalPrice)
 				.filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
 		
@@ -61,6 +80,4 @@ public class SaleServiceImpl implements SaleService {
 		return total;
 	}
 
-	
-	
 }
