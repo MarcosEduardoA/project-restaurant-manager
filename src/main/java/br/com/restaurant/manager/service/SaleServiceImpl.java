@@ -36,7 +36,7 @@ public class SaleServiceImpl implements SaleService {
 		
 		item.setSale(sale); 
 		
-		BigDecimal totalValue = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+		BigDecimal totalValue = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).setScale(2);
 		
 		item.setTotalPrice(totalValue);
 		sale.getItems().add(item);
@@ -62,7 +62,7 @@ public class SaleServiceImpl implements SaleService {
 			total = total.add(serviceTaxValue);
 		}
 		
-		return total;
+		return total.setScale(2);
 	}
 
 	@Override

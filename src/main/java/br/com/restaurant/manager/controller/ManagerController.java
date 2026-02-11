@@ -52,8 +52,8 @@ public class ManagerController {
 	}
 	
 	@PostMapping("save-sale")
-	public ModelAndView save(@ModelAttribute Sale sale, 
-			@ModelAttribute Item item, SessionStatus sessionStatus) {
+	public ModelAndView save(Sale sale, 
+			Item item, SessionStatus sessionStatus) {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
@@ -61,6 +61,7 @@ public class ManagerController {
 		
 		sessionStatus.setComplete(); // Limpa a sessão
 		
+		modelAndView.addObject("totalPrice", "R$ " + sale.getTotalValue());
 		modelAndView.addObject("sale", new Sale()); // Limpa o objeto de venda
 		modelAndView.addObject("msg", "Saved successfully!"); // Emite a mensagem de sucesso
 		modelAndView.addObject("products", productRepository.findAll()); // Carrega todos os produtos
@@ -76,6 +77,7 @@ public class ManagerController {
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
 		saleService.addItem(sale, item);
+		modelAndView.addObject("totalPriceItem", "R$ " + item.getTotalPrice());
 		modelAndView.addObject("item", new Item());
 		modelAndView.addObject("products", productRepository.findAll());
 		modelAndView.addObject("discounts", discountRepository.findAll());

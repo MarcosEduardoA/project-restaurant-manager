@@ -122,3 +122,10 @@ nav a:hover {
 	color: var(--color4);
 }
 
+.totalPrice {
+	padding: 10px;
+	font-weight: bolder;
+	font-size: 2em;
+	color: black;
+}
+

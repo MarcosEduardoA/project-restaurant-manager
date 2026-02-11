@@ -44,10 +44,11 @@
 			<div class="row">
 				<label for="unitPrice" class="label-default">Unit Price:</label>
 				<input id="unitPrice" name="unitPrice" class="input-default" th:field="*{unitPrice}" type="number"> 
-				
-				<label for="totalPrice" class="label-default">Total Price:</label>
-				<input id="totalPrice" name="totalPrice" class="input-default" th:field="*{totalPrice}" type="number" readonly="readonly">
 			</div>
+			
+			<div class="totalPrice">
+				<p>Total: <span th:text="${totalPriceItem}"></span></p>
+			</div>	
 			
 			<div class="row">
 				<button type="submit" class="button-default">Add</button>
@@ -65,10 +66,6 @@
 			</div>
 			
 			<div class="row">
-				<label for="totalValue" class="label-default">Total Value:</label>
-				<input id="totalValue" name="totalValue" class="input-default" th:field="*{totalValue}" type="number" readonly="readonly">
-			
-			
 				<label for="discout" class="label-default">Discount:</label>
 				<select id="discout" name="discout" class="select-default" th:field="*{discount}">
 					<option label="Select a discount" value="">
@@ -98,6 +95,10 @@
 				<label id="observation" class="label-default">Observation:</label>
 				<input id="observation" name="observation" class="input-default" type="text" th:field="*{observation}" placeholder="Infom the sale proccess">
 			</div>
+			
+			<div class="totalPrice">
+				<p>Total: <span th:text="${totalPrice}"></span></p>
+			</div>				
 			
 			<div class="row">
 				<button value="save" id="save-sale-button" class="button-default" type="submit">Save</button>
