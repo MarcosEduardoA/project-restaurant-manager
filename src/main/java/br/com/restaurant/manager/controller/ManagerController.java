@@ -1,10 +1,12 @@
 package br.com.restaurant.manager.controller;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -38,8 +40,13 @@ public class ManagerController {
 		this.saleService = saleService;
 	}
 	
+	@ModelAttribute("sale")
+	public Sale getSale() {
+		return new Sale();
+	}
+	
 	@GetMapping("/sale-manager")
-	public ModelAndView init() {
+	public ModelAndView init(@ModelAttribute("sale") Sale sale) {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
@@ -52,27 +59,36 @@ public class ManagerController {
 	}
 	
 	@PostMapping("save-sale")
-	public ModelAndView save(Sale sale, 
-			Item item, SessionStatus sessionStatus) {
+	public ModelAndView save(@ModelAttribute("sale") Sale sale) throws Exception {
+		
+		Sale savedSale = saleService.createSale(sale);   // Salva a venda
+		
+		ModelAndView modelAndView = new ModelAndView("redirect:/manager/edit/" + savedSale.getId()); // Redireciona para a edição de Sale
+		
+		return modelAndView;
+	}
+	
+	@GetMapping("/edit/{id}")
+	public ModelAndView update(@PathVariable("id") Long id, @ModelAttribute("sale") Sale sale,
+			@ModelAttribute("item") Item item) {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
-		saleService.createSale(sale);  // Salva a venda
+		Sale saleUpdate = saleRepository.findById(id).orElse(new Sale()); // Encontra o Sale já cadastrado
 		
-		sessionStatus.setComplete(); // Limpa a sessão
-		
-		modelAndView.addObject("totalPrice", "R$ " + sale.getTotalValue());
-		modelAndView.addObject("sale", new Sale()); // Limpa o objeto de venda
+		modelAndView.addObject("totalPrice", "R$ " + saleUpdate.getTotalValue());
+		modelAndView.addObject("sale", saleUpdate); // Limpa o objeto de venda
+		modelAndView.addObject("item", new Item()); // Cria um novo Item
 		modelAndView.addObject("msg", "Saved successfully!"); // Emite a mensagem de sucesso
 		modelAndView.addObject("products", productRepository.findAll()); // Carrega todos os produtos
-		modelAndView.addObject("discounts", discountRepository.findAll());
+		modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
 		
 		return modelAndView;
 	}
 	
 	@PostMapping("add-item")
-	public ModelAndView addItem(@ModelAttribute Item item, 
-			@ModelAttribute Sale sale) {
+	public ModelAndView addItem(@ModelAttribute("item") Item item, 
+			@ModelAttribute("sale") Sale sale) {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
@@ -81,6 +97,22 @@ public class ManagerController {
 		modelAndView.addObject("item", new Item());
 		modelAndView.addObject("products", productRepository.findAll());
 		modelAndView.addObject("discounts", discountRepository.findAll());
+		return modelAndView;
+		
+	}
+	
+	@GetMapping("/new")
+	public ModelAndView newSale(SessionStatus sessionStatus) {
+		
+		sessionStatus.setComplete();
+		
+		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
+		
+		modelAndView.addObject("sale", new Sale());
+		modelAndView.addObject("products", productRepository.findAll());
+		modelAndView.addObject("discounts", discountRepository.findAll());
+		modelAndView.addObject("item", new Item());
+		
 		return modelAndView;
 		
 	}

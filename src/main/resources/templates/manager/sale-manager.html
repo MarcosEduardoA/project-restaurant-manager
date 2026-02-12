@@ -55,7 +55,7 @@
 			</div>
 		</form>
 		
-		<form id="form-sale" action="save-sale" class="form-default" method="post" th:object="${sale}">
+		<form id="form-sale" action="/manager/save-sale" class="form-default" method="post" th:object="${sale}">
 			
 			<div class="row">
 				<label for="requestNumber" class="label-default">Request Number:</label>
@@ -102,6 +102,7 @@
 			
 			<div class="row">
 				<button value="save" id="save-sale-button" class="button-default" type="submit">Save</button>
+				<a th:href="@{/manager/new}" id="new-sale-button" class="button-default">New Sale</a>
 			</div>
 			 
 		</form>

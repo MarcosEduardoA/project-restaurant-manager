@@ -14,5 +14,5 @@ public interface SaleService {
 	
 	BigDecimal applyDiscount(BigDecimal total, Discount discount);
 	
-	Sale createSale(Sale sale);
+	Sale createSale(Sale sale) throws Exception;
 }
