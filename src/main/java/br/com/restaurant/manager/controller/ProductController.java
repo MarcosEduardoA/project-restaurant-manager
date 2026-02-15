@@ -9,13 +9,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.restaurant.manager.model.Product;
 import br.com.restaurant.manager.repository.ProductRepository;
+import br.com.restaurant.manager.service.ProductService;
 
 @Controller
 @RequestMapping("/manager")
 public class ProductController {
 	
+	private final ProductService productService;
+	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	public ProductController(ProductService productService) {
+		this.productService = productService;
+	}
 	
 	@GetMapping("/stock-manager")
 	public ModelAndView init() {
@@ -30,7 +37,9 @@ public class ProductController {
 	public ModelAndView add(Product product) {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/stock-manager");
-		productRepository.save(product);
+		
+		productService.createProduct(product);
+		
 		modelAndView.addObject("product", new Product());
 		modelAndView.addObject("msg", "Product added to stock");
 		
