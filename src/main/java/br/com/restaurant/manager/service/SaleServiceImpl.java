@@ -29,7 +29,7 @@ public class SaleServiceImpl implements SaleService {
 	
 	@Override
 	@Transactional
-	public Sale createSale(Sale sale) throws Exception {
+	public Sale createSale(Sale sale) throws Exception { // Salva o objeto Sale
 		
 		Sale saleToSave; // Sale que será salvo
 		
@@ -66,7 +66,7 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
-	public BigDecimal calculateTotal(Sale sale) {
+	public BigDecimal calculateTotal(Sale sale) { // Calcula o valor total de Sale
 		
 		// Pega o valor total somado de todos os items
 		BigDecimal total = sale.getItems().stream().map(Item::getTotalPrice)
@@ -87,7 +87,7 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
-	public BigDecimal applyDiscount(BigDecimal total, Discount discount) {
+	public BigDecimal applyDiscount(BigDecimal total, Discount discount) { // Aplica o desconto ao valor de Sale
 		
 		if (discount.getType().equals(DiscountType.PERCENTAGE)) {
 			total = total.subtract(total.multiply(discount.getValue().divide(BigDecimal.valueOf(100))));

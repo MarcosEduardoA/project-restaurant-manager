@@ -7,6 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.restaurant.manager.model.Discount;
 import br.com.restaurant.manager.repository.DiscountRepository;
+import br.com.restaurant.manager.service.DiscountService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequestMapping("/manager")
 public class DiscountController {
+	
+	private final DiscountService discountService;
+	
+	public DiscountController(DiscountService discountService) {
+		this.discountService = discountService;
+	}
 	
 	@Autowired
 	private DiscountRepository discountRepository;
@@ -35,7 +43,8 @@ public class DiscountController {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/discount-manager");
 		
-		discountRepository.save(discount);
+		discountService.createDiscount(discount);
+		
 		modelAndView.addObject("discount", new Discount());
 		modelAndView.addObject("msg", "Discount saved successfully!");
 		
