@@ -23,7 +23,9 @@ public class Item implements Serializable {
 	@JoinColumn(name = "sale_id")
 	private Sale sale;
 	
-	private Product product;
+	@ManyToOne
+	@JoinColumn(name = "dish_id")
+	private Dish dish;
 	
 	private Integer quantity;
 	
@@ -47,14 +49,14 @@ public class Item implements Serializable {
 		this.sale = sale;
 	}
 
-	public Product getProduct() {
-		return product;
+	public Dish getDish() {
+		return dish;
 	}
-
-	public void setProduct(Product product) {
-		this.product = product;
+	
+	public void setDish(Dish dish) {
+		this.dish = dish;
 	}
-
+	
 	public Integer getQuantity() {
 		return quantity;
 	}

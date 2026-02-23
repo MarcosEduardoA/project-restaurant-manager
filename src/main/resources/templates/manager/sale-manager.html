@@ -19,7 +19,7 @@
 	
 	<nav class="pages-nav">
 		<a href="stock-manager">Stock</a>
-		<a href="#">Recipe</a>
+		<a href="recipe-manager">Recipe</a>
 		<a href="#">Gain</a>
 		<a href="#">Expenses</a>
 		<a href="discount-manager">Discount</a>
@@ -35,8 +35,8 @@
 			<div class="row">
 			
 				<label class="label-default">Items:</label>
-				<select th:field="*{product}" class="select-default"> 
-					<option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">
+				<select th:field="*{dish}" class="select-default"> 
+					<option th:each="d : ${dishes}" th:value="${d.id}" th:text="${d.name}">
 				</select>
 				
 				<label for="quantity" class="label-default">Quantity:</label>

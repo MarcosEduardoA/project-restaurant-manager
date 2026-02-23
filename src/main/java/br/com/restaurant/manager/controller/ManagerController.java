@@ -1,7 +1,5 @@
 package br.com.restaurant.manager.controller;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import br.com.restaurant.manager.model.Item;
 import br.com.restaurant.manager.model.Sale;
 import br.com.restaurant.manager.repository.DiscountRepository;
-import br.com.restaurant.manager.repository.ProductRepository;
 import br.com.restaurant.manager.repository.SaleRepository;
+import br.com.restaurant.manager.service.DishService;
 import br.com.restaurant.manager.service.SaleService;
 
 @Controller
@@ -27,17 +25,17 @@ public class ManagerController {
 	
 	private final SaleService saleService;
 	
+	private final DishService dishService;
+	
 	@Autowired
 	private SaleRepository saleRepository;
 	
 	@Autowired
-	private ProductRepository productRepository;
-	
-	@Autowired
 	private DiscountRepository discountRepository;
 	
-	public ManagerController(SaleService saleService) {
+	public ManagerController(SaleService saleService, DishService dishService) {
 		this.saleService = saleService;
+		this.dishService = dishService;
 	}
 	
 	@ModelAttribute("sale")
@@ -51,7 +49,7 @@ public class ManagerController {
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
 		modelAndView.addObject("sale", new Sale());
-		modelAndView.addObject("products", productRepository.findAll());
+		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		modelAndView.addObject("item", new Item());
 		
@@ -80,7 +78,7 @@ public class ManagerController {
 		modelAndView.addObject("sale", saleUpdate); // Limpa o objeto de venda
 		modelAndView.addObject("item", new Item()); // Cria um novo Item
 		modelAndView.addObject("msg", "Saved successfully!"); // Emite a mensagem de sucesso
-		modelAndView.addObject("products", productRepository.findAll()); // Carrega todos os produtos
+		modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
 		modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
 		
 		return modelAndView;
@@ -95,7 +93,7 @@ public class ManagerController {
 		saleService.addItem(sale, item);
 		modelAndView.addObject("totalPriceItem", "R$ " + item.getTotalPrice());
 		modelAndView.addObject("item", new Item());
-		modelAndView.addObject("products", productRepository.findAll());
+		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		return modelAndView;
 		
@@ -109,7 +107,7 @@ public class ManagerController {
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
 		modelAndView.addObject("sale", new Sale());
-		modelAndView.addObject("products", productRepository.findAll());
+		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		modelAndView.addObject("item", new Item());
 		

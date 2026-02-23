@@ -1,5 +1,7 @@
 package br.com.restaurant.manager.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import br.com.restaurant.manager.model.Product;
@@ -18,6 +20,12 @@ public class ProductServiceImpl implements ProductService {
 	public Product createProduct(Product product) {
 		
 		return productRepository.save(product);
+	}
+
+	@Override
+	public List<Product> loadProducts() {
+		
+		return productRepository.findAll();
 	}
 
 }

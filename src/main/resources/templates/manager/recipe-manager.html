@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Recipe Manager</title>
+	
+	<link type="text/css" rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+	
+	<header id="header-recipe">
+		<h1>Recipe Manager</h1>
+	</header>
+	
+	<nav class="pages-nav">
+		<a href="sale-manager">Sale</a>
+		<a href="stock-manager">Stock</a>
+		<a href="#">Gain</a>
+		<a href="#">Expenses</a>
+		<a href="discount-manager">Discount</a>
+	</nav>
+	
+	<div>
+		<span th:text="${msg}"></span>
+	</div>
+	
+	<main id="main-recipe-manager">
+	
+		<form id="form-composition" class="form-default" th:object="${composition}" action="add-composition" method="post">
+			
+			<div class="row">
+				<label for="product" class="label-default">Product:</label>
+				<select class="select-default" th:field="*{product}">
+					<option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">
+				</select>
+			</div>
+			
+			<div class="row">
+				<label for="quantity" class="label-default">Quantity:</label>
+				<input id="quantity" name="quantity" th:field="*{quantity}" class="input-default" type="number" placeholder="Inform the product quantity">
+			</div>
+			
+			<div class="row">
+				<button value="add" id="add-composition-button" type="submit" class="button-default">Add</button>
+			</div>
+		</form>
+		
+		<form id="form-recipe-manager" class="form-default" action="save-dish" th:object="${dish}" method="post">
+			
+			<div class="row">
+				<label for="name" class="label-default">Name:</label>
+				<input id="name" name="name" th:field="*{name}" class="input-default" type="text" placeholder="Inform the dish name">
+			</div>
+			
+			<div class="row">
+				<label for="price" class="label-default">Price:</label>
+				<input id="price" name="price" th:field="*{price}" class="input-default" type="number" placeholder="Inform the dish price">
+			</div>
+			
+			<button value="save" id="save-dish-button" type="submit" class="button-default">Save</button>
+		</form>
+	</main>
+	
+	
+	
+</body>
+</html>
