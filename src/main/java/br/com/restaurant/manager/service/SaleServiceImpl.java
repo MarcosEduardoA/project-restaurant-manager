@@ -55,7 +55,8 @@ public class SaleServiceImpl implements SaleService {
 	@Override
 	public Sale addItem(Sale sale, Item item) { /*Adiciona items na lista do Sale*/
 		
-		item.setSale(sale); 
+		item.setSale(sale);
+		item.setUnitPrice(item.getDish().getPrice());
 		
 		BigDecimal totalValue = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).setScale(2);
 		
