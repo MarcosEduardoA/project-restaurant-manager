@@ -40,6 +40,13 @@
 			</div>
 			
 			<div class="row">
+				<label for="unitOfMeasurement" class="label-default">Unit of Measurement:</label>
+				<select id="unitOfMeasurement" name="unitOfMeasurement" class="select-default" th:field="*{unitOfMeasurement}">
+					<option th:each="u : ${T(br.com.restaurant.manager.model.UnitOfMeasurement).values()}" th:value="${u}" th:text="${u.value}">
+				</select>
+			</div>
+			
+			<div class="row">
 				<label for="stockQuantity" class="label-default">Stock Quantity:</label>
 				<input id="stockQuantity" name="stockQuantity" class="input-default" th:field="*{stockQuantity}" type="number">
 			</div>

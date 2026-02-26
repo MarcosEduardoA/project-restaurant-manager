@@ -86,7 +86,7 @@
 			<div class="row">
 				<label for="status" class="label-default">Status:</label>
 				<select id="status" name="status" class="select-default" th:field="*{status}">
-					<option th:each="s : ${T(br.com.restaurant.manager.model.Status).values()}" th:value="${s}" th:text="${s.value}">
+					<option th:each="s : ${T(br.com.restaurant.manager.model.Status).values()}" th:value="${s.value}" th:text="${s}">
 				</select>
 				
 				<label id="observation" class="label-default">Observation:</label>

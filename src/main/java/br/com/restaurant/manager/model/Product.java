@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +24,9 @@ public class Product implements Serializable {
 	private BigDecimal price;
 	
 	private Integer stockQuantity;
+	
+	@Enumerated(EnumType.STRING)
+	private UnitOfMeasurement unitOfMeasurement;
 
 	public Long getId() {
 		return id;
@@ -53,6 +58,14 @@ public class Product implements Serializable {
 
 	public void setStockQuantity(Integer stockQuantity) {
 		this.stockQuantity = stockQuantity;
+	}
+	
+	public UnitOfMeasurement getUnitOfMeasurement() {
+		return unitOfMeasurement;
+	}
+	
+	public void setUnitOfMeasurement(UnitOfMeasurement unitOfMeasurement) {
+		this.unitOfMeasurement = unitOfMeasurement;
 	}
 	
 }

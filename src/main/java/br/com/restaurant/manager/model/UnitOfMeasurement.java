@@ -2,10 +2,10 @@ package br.com.restaurant.manager.model;
 
 public enum UnitOfMeasurement {
 	
-	Liter("L"),
-	Milliliter("ml"),
-	Kilogram("kg"),
-	Gram("g");
+	L("Liter"),
+	ML("Milliliter"),
+	KG("Kilogram"),
+	G("Gram");
 	
 	private String value;
 	
