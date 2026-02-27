@@ -86,11 +86,12 @@
 			<div class="row">
 				<label for="status" class="label-default">Status:</label>
 				<select id="status" name="status" class="select-default" th:field="*{status}">
-					<option th:each="s : ${T(br.com.restaurant.manager.model.Status).values()}" th:value="${s.value}" th:text="${s}">
+					<option th:each="s : ${T(br.com.restaurant.manager.model.Status).values()}" th:value="${s}" th:text="${s.value}">
 				</select>
 				
 				<label id="observation" class="label-default">Observation:</label>
-				<input id="observation" name="observation" class="input-default" type="text" th:field="*{observation}" placeholder="Infom the sale proccess">
+				<textarea id="observation" name="observation" class="input-default" th:field="*{observation}" placeholder="Infom the sale proccess"
+				rows="10"></textarea>
 			</div>
 			
 			<div class="totalPrice">
