@@ -1,6 +1,7 @@
 package br.com.restaurant.manager.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -10,8 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.restaurant.manager.model.Discount;
 import br.com.restaurant.manager.model.DiscountType;
+import br.com.restaurant.manager.model.DishComposition;
 import br.com.restaurant.manager.model.Item;
 import br.com.restaurant.manager.model.Sale;
+import br.com.restaurant.manager.repository.DishCompositionRepository;
+import br.com.restaurant.manager.repository.ProductRepository;
 import br.com.restaurant.manager.repository.SaleRepository;
 import br.com.restaurant.manager.utilities.SaleMapper;
 
@@ -19,6 +23,12 @@ import br.com.restaurant.manager.utilities.SaleMapper;
 public class SaleServiceImpl implements SaleService {
 	
 	private final SaleRepository saleRepository;
+	
+	@Autowired
+	private DishCompositionRepository dishCompositionRepository;
+	
+	@Autowired
+	private ProductRepository productRepository;
 	
 	@Autowired
 	private SaleMapper saleMapper;
@@ -48,6 +58,17 @@ public class SaleServiceImpl implements SaleService {
 		
 		BigDecimal total = calculateTotal(saleToSave); // Calcula o valor total de Sale
 		saleToSave.setTotalValue(total);
+		
+		for (Item i : saleToSave.getItems()) { // Processo de atualizar o estoque
+			List<DishComposition> dishCompositions = dishCompositionRepository.findDishCompositionByDishId(i.getDish().getId());
+			for (DishComposition d : dishCompositions) {
+				Long productId = d.getProduct().getId();
+				Integer currentStockQuantity = productRepository.getProductStockQuantityById(productId);
+				Integer updatedStockQuantity = currentStockQuantity - d.getQuantity().intValue() * i.getQuantity();
+				
+				productRepository.updateProductStockQuantity(updatedStockQuantity, productId);
+			}
+		}
 		
 		return saleRepository.save(saleToSave); // Salva o Sale
 	}
@@ -92,11 +113,9 @@ public class SaleServiceImpl implements SaleService {
 		
 		if (discount.getType().equals(DiscountType.PERCENTAGE)) {
 			total = total.subtract(total.multiply(discount.getValue().divide(BigDecimal.valueOf(100))));
-			System.out.println(total.multiply(discount.getValue().divide(BigDecimal.valueOf(100))));
 		}
 		else if (discount.getType().equals(DiscountType.FIXED)) {
 			total = total.subtract(discount.getValue());
-			System.out.println(discount.getValue());
 		}
 		
 		return total;
