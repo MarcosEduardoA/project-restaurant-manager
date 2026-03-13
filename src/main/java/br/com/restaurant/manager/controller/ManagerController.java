@@ -77,7 +77,7 @@ public class ManagerController {
 		modelAndView.addObject("totalPrice", "R$ " + saleUpdate.getTotalValue());
 		modelAndView.addObject("sale", saleUpdate); // Limpa o objeto de venda
 		modelAndView.addObject("item", new Item()); // Cria um novo Item
-		modelAndView.addObject("msg", "Saved successfully!"); // Emite a mensagem de sucesso
+		modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
 		modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
 		modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
 		
@@ -93,6 +93,7 @@ public class ManagerController {
 		saleService.addItem(sale, item);
 		modelAndView.addObject("totalPriceItem", "R$ " + item.getTotalPrice());
 		modelAndView.addObject("item", new Item());
+		modelAndView.addObject("msg", saleService.getMsg());
 		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		return modelAndView;

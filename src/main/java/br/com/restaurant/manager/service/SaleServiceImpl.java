@@ -1,37 +1,33 @@
 package br.com.restaurant.manager.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Objects;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import br.com.restaurant.manager.model.Discount;
 import br.com.restaurant.manager.model.DiscountType;
 import br.com.restaurant.manager.model.DishComposition;
 import br.com.restaurant.manager.model.Item;
 import br.com.restaurant.manager.model.Sale;
-import br.com.restaurant.manager.repository.DishCompositionRepository;
 import br.com.restaurant.manager.repository.ProductRepository;
 import br.com.restaurant.manager.repository.SaleRepository;
 import br.com.restaurant.manager.utilities.SaleMapper;
 
 @Service
 public class SaleServiceImpl implements SaleService {
-	
+
 	private final SaleRepository saleRepository;
-	
-	@Autowired
-	private DishCompositionRepository dishCompositionRepository;
 	
 	@Autowired
 	private ProductRepository productRepository;
 	
 	@Autowired
 	private SaleMapper saleMapper;
+	
+	private String msg;
 	
 	public SaleServiceImpl(SaleRepository saleRepository) {
 		this.saleRepository = saleRepository;
@@ -59,31 +55,31 @@ public class SaleServiceImpl implements SaleService {
 		BigDecimal total = calculateTotal(saleToSave); // Calcula o valor total de Sale
 		saleToSave.setTotalValue(total);
 		
-		for (Item i : saleToSave.getItems()) { // Processo de atualizar o estoque
-			List<DishComposition> dishCompositions = dishCompositionRepository.findDishCompositionByDishId(i.getDish().getId());
-			for (DishComposition d : dishCompositions) {
-				Long productId = d.getProduct().getId();
-				Integer currentStockQuantity = productRepository.getProductStockQuantityById(productId);
-				Integer updatedStockQuantity = currentStockQuantity - d.getQuantity().intValue() * i.getQuantity();
-				
-				productRepository.updateProductStockQuantity(updatedStockQuantity, productId);
-			}
-		}
-		
+		msg = "Saved successfully!";
 		return saleRepository.save(saleToSave); // Salva o Sale
 	}
 	
 	@Override
 	public Sale addItem(Sale sale, Item item) { /*Adiciona items na lista do Sale*/
 		
-		item.setSale(sale);
-		item.setUnitPrice(item.getDish().getPrice());
-		
-		BigDecimal totalValue = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).setScale(2);
-		
-		item.setTotalPrice(totalValue);
-		sale.getItems().add(item);
-		
+		for (DishComposition dishComposition : item.getDish().getComposition()) {
+			Integer currentStockQuantity = productRepository.getProductStockQuantityById(dishComposition.getProduct().getId());
+			Integer updatedStockQuantity = currentStockQuantity - dishComposition.getQuantity().intValue() * item.getQuantity();
+			if (updatedStockQuantity < 0) {
+				msg = "Insuficient ingredients in stock";
+				item.setTotalPrice(BigDecimal.ZERO);
+			}
+			else {
+				item.setSale(sale);
+				item.setUnitPrice(item.getDish().getPrice());
+				
+				BigDecimal totalValue = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).setScale(2);
+				
+				item.setTotalPrice(totalValue);
+				sale.getItems().add(item);
+				productRepository.updateProductStockQuantity(updatedStockQuantity, dishComposition.getProduct().getId());
+			}
+		}
 		return sale;
 	}
 
@@ -120,5 +116,9 @@ public class SaleServiceImpl implements SaleService {
 		
 		return total;
 	}
-
+	
+	public String getMsg() {
+		return msg;
+	}
+	
 }
