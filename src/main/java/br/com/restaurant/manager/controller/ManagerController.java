@@ -61,7 +61,7 @@ public class ManagerController {
 		
 		Sale savedSale = saleService.createSale(sale);   // Salva a venda
 		
-		ModelAndView modelAndView = new ModelAndView("redirect:/manager/edit/" + savedSale.getId()); // Redireciona para a edição de Sale
+		ModelAndView modelAndView = new ModelAndView("redirect:/manager/edit/" + savedSale.getId()); // Redireciona para a edição do Sale salvo
 		
 		return modelAndView;
 	}
@@ -74,7 +74,7 @@ public class ManagerController {
 		
 		Sale saleUpdate = saleRepository.findById(id).orElse(new Sale()); // Encontra o Sale já cadastrado
 		
-		modelAndView.addObject("totalPrice", "R$ " + saleUpdate.getTotalValue());
+		modelAndView.addObject("totalPrice", "R$ " + saleUpdate.getTotalValue()); // Pega o valor total de Sale
 		modelAndView.addObject("sale", saleUpdate); // Limpa o objeto de venda
 		modelAndView.addObject("item", new Item()); // Cria um novo Item
 		modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
@@ -91,7 +91,7 @@ public class ManagerController {
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
 		saleService.addItem(sale, item);
-		modelAndView.addObject("totalPriceItem", "R$ " + item.getTotalPrice());
+		modelAndView.addObject("totalPriceItem", saleService.getTotalPriceItem());
 		modelAndView.addObject("item", new Item());
 		modelAndView.addObject("msg", saleService.getMsg());
 		modelAndView.addObject("dishes", dishService.loadDishes());

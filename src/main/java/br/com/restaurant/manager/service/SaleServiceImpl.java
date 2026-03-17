@@ -2,7 +2,7 @@ package br.com.restaurant.manager.service;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +29,8 @@ public class SaleServiceImpl implements SaleService {
 	
 	private String msg;
 	
+	private String totalPriceItem;
+	
 	public SaleServiceImpl(SaleRepository saleRepository) {
 		this.saleRepository = saleRepository;
 	}
@@ -41,6 +43,7 @@ public class SaleServiceImpl implements SaleService {
 		
 		if (sale.getId() == null) {
 			saleToSave = sale;
+			saleToSave.setRequestNumber(generateSaleNumber());
 		}
 		else{
 			saleToSave = saleRepository.findById(sale.getId()).orElse(new Sale());
@@ -67,7 +70,7 @@ public class SaleServiceImpl implements SaleService {
 			Integer updatedStockQuantity = currentStockQuantity - dishComposition.getQuantity().intValue() * item.getQuantity();
 			if (updatedStockQuantity < 0) {
 				msg = "Insuficient ingredients in stock";
-				item.setTotalPrice(BigDecimal.ZERO);
+				totalPriceItem = "R$ 0.00";
 			}
 			else {
 				item.setSale(sale);
@@ -78,6 +81,7 @@ public class SaleServiceImpl implements SaleService {
 				item.setTotalPrice(totalValue);
 				sale.getItems().add(item);
 				productRepository.updateProductStockQuantity(updatedStockQuantity, dishComposition.getProduct().getId());
+				totalPriceItem = "R$ " + item.getTotalPrice();
 			}
 		}
 		return sale;
@@ -117,8 +121,34 @@ public class SaleServiceImpl implements SaleService {
 		return total;
 	}
 	
+	@Override
+	public String generateSaleNumber() {
+		
+		String numbers = "0123456789";
+		
+		StringBuilder sb = new StringBuilder();
+		
+		Random random = new Random();
+		
+		for (int i = 0; i < 6; i++) { // Ira sortear os números 6 vezes
+			int index = random.nextInt(numbers.length()); // Posição sorteada
+			
+			char randomChar = numbers.charAt(index); // Número sorteado
+			
+			sb.append(randomChar);
+		}
+		
+		String generatedRequestNumber = sb.toString();
+		
+		return generatedRequestNumber;
+	}
+	
 	public String getMsg() {
 		return msg;
+	}
+	
+	public String getTotalPriceItem() {
+		return totalPriceItem;
 	}
 	
 }

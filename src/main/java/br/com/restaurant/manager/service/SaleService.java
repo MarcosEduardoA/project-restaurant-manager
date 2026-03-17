@@ -15,6 +15,11 @@ public interface SaleService {
 	BigDecimal applyDiscount(BigDecimal total, Discount discount);
 	
 	Sale createSale(Sale sale) throws Exception;
-
+	
+	String generateSaleNumber();
+	
 	String getMsg();
+	
+	String getTotalPriceItem();
+	
 }

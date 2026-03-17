@@ -1,5 +1,6 @@
 package br.com.restaurant.manager;
 
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,5 +16,5 @@ class ProjectRestaurantManagerApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
+	
 }
