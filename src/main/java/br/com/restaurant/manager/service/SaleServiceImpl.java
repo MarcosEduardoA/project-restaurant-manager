@@ -31,6 +31,8 @@ public class SaleServiceImpl implements SaleService {
 	
 	private String totalPriceItem;
 	
+	private String totalPriceSale;
+	
 	public SaleServiceImpl(SaleRepository saleRepository) {
 		this.saleRepository = saleRepository;
 	}
@@ -59,6 +61,7 @@ public class SaleServiceImpl implements SaleService {
 		saleToSave.setTotalValue(total);
 		
 		msg = "Saved successfully!";
+		totalPriceSale = "R$ " + saleToSave.getTotalValue();
 		return saleRepository.save(saleToSave); // Salva o Sale
 	}
 	
@@ -68,22 +71,23 @@ public class SaleServiceImpl implements SaleService {
 		for (DishComposition dishComposition : item.getDish().getComposition()) {
 			Integer currentStockQuantity = productRepository.getProductStockQuantityById(dishComposition.getProduct().getId());
 			Integer updatedStockQuantity = currentStockQuantity - dishComposition.getQuantity().intValue() * item.getQuantity();
-			if (updatedStockQuantity < 0) {
-				msg = "Insuficient ingredients in stock";
+			if (updatedStockQuantity <= 0) {
 				totalPriceItem = "R$ 0.00";
+				msg = "Insuficient ingredients in stock!";
+				return sale;
 			}
 			else {
-				item.setSale(sale);
-				item.setUnitPrice(item.getDish().getPrice());
-				
-				BigDecimal totalValue = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).setScale(2);
-				
-				item.setTotalPrice(totalValue);
-				sale.getItems().add(item);
 				productRepository.updateProductStockQuantity(updatedStockQuantity, dishComposition.getProduct().getId());
-				totalPriceItem = "R$ " + item.getTotalPrice();
 			}
 		}
+		item.setSale(sale);
+		item.setUnitPrice(item.getDish().getPrice());
+				
+		BigDecimal totalValue = item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())).setScale(2);
+				
+		item.setTotalPrice(totalValue);
+		sale.getItems().add(item);
+		totalPriceItem = "R$ " + item.getTotalPrice();
 		return sale;
 	}
 
@@ -149,6 +153,10 @@ public class SaleServiceImpl implements SaleService {
 	
 	public String getTotalPriceItem() {
 		return totalPriceItem;
+	}
+	
+	public String getTotalPriceSale() {
+		return totalPriceSale;
 	}
 	
 }

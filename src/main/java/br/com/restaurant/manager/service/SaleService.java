@@ -22,4 +22,5 @@ public interface SaleService {
 	
 	String getTotalPriceItem();
 	
+	String getTotalPriceSale();
 }
