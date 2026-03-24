@@ -1,6 +1,7 @@
 package br.com.restaurant.manager.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Random;
 
@@ -46,6 +47,7 @@ public class SaleServiceImpl implements SaleService {
 		if (sale.getId() == null) {
 			saleToSave = sale;
 			saleToSave.setRequestNumber(generateSaleNumber());
+			saleToSave.setSaleDate(LocalDate.now());
 		}
 		else{
 			saleToSave = saleRepository.findById(sale.getId()).orElse(new Sale());
