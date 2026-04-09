@@ -153,3 +153,16 @@ i button {
 	display: block;
 	background-color: red;
 }
+
+#table-sales {
+	min-width: 70%;
+	background-color: white;
+	border-radius: 5px;
+	padding: 20px;
+	margin: auto;
+	margin-bottom: 20px;
+}
+
+#tr-sale {
+	text-align: center;
+}

@@ -52,6 +52,7 @@ public class ManagerController {
 		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		modelAndView.addObject("item", new Item());
+		modelAndView.addObject("sales", saleRepository.findAll());
 		
 		return modelAndView;
 	}

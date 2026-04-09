@@ -104,6 +104,25 @@
 			</div>
 			 
 		</form>
+		
+		<table id="table-sales">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Request Number</th>
+					<th>Sale Date</th>
+					<th>Status</th>
+					<th>Total Value</th>
+				</tr>
+			</thead>
+			<tr th:each="sale : ${sales}" id="tr-sale">
+				<td th:text="${sale.id}"></td>
+				<td th:text="${sale.requestNumber}"></td>
+				<td th:text="${sale.saleDate}"></td>
+				<td th:text="${sale.status}"></td>
+				<td th:text="${sale.totalValue}"></td>
+			</tr>
+		</table>
 	</main>
 	
 </body>
