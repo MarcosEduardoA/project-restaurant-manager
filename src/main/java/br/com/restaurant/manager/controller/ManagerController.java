@@ -2,6 +2,7 @@ package br.com.restaurant.manager.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,7 +63,15 @@ public class ManagerController {
 		
 		Sale savedSale = saleService.createSale(sale);   // Salva a venda
 		
-		ModelAndView modelAndView = new ModelAndView("redirect:/manager/edit/" + savedSale.getId()); // Redireciona para a edição do Sale salvo
+		ModelAndView modelAndView = new ModelAndView("manager/sale-manager"); // Redireciona para a edição do Sale salvo
+		
+		modelAndView.addObject("sale", new Sale()); // Limpa o objeto de venda
+		modelAndView.addObject("totalPrice", "R$ " + 0.00); // Pega o valor total de Sale
+		modelAndView.addObject("item", new Item()); // Cria um novo Item
+		modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
+		modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
+		modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
+		modelAndView.addObject("sales", saleRepository.findAll());
 		
 		return modelAndView;
 	}
@@ -75,12 +84,13 @@ public class ManagerController {
 		
 		Sale saleUpdate = saleRepository.findById(id).orElse(new Sale()); // Encontra o Sale já cadastrado
 		
-		modelAndView.addObject("totalPrice", "R$ " + saleUpdate.getTotalValue()); // Pega o valor total de Sale
 		modelAndView.addObject("sale", saleUpdate); // Limpa o objeto de venda
+		modelAndView.addObject("totalPrice", "R$ " + saleUpdate.getTotalValue()); // Pega o valor total de Sale
 		modelAndView.addObject("item", new Item()); // Cria um novo Item
 		modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
 		modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
 		modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
+		modelAndView.addObject("sales", saleRepository.findAll());
 		
 		return modelAndView;
 	}
@@ -111,10 +121,30 @@ public class ManagerController {
 		modelAndView.addObject("sale", new Sale());
 		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
+		modelAndView.addObject("sales", saleRepository.findAll());
 		modelAndView.addObject("item", new Item());
 		
 		return modelAndView;
 		
+	}
+	
+	@PostMapping("delete/{id}")
+	public ModelAndView delete(@PathVariable("id") Long id, @ModelAttribute("sale") Sale sale,
+			@ModelAttribute("item") Item item) {
+		
+		saleService.deleteSaleById(id);
+		
+		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
+		
+		modelAndView.addObject("sale", new Sale());
+		modelAndView.addObject("msg", saleService.getMsg());
+		modelAndView.addObject("dishes", dishService.loadDishes());
+		modelAndView.addObject("discounts", discountRepository.findAll());
+		modelAndView.addObject("sales", saleRepository.findAll());
+		modelAndView.addObject("item", new Item());
+		
+		
+		return modelAndView;
 	}
 	
 	public SaleRepository getSaleRepository() {

@@ -131,6 +131,10 @@ nav a:hover {
 	color: var(--color4);
 }
 
+#observation {
+	resize: none;
+}
+
 #new-sale-button {
 	background-color: var(--color2);
 	color: white;

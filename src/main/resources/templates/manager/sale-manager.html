@@ -113,6 +113,8 @@
 					<th>Sale Date</th>
 					<th>Status</th>
 					<th>Total Value</th>
+					<th>Edit</th>
+					<th>Delete</th>
 				</tr>
 			</thead>
 			<tr th:each="sale : ${sales}" id="tr-sale">
@@ -121,6 +123,21 @@
 				<td th:text="${sale.saleDate}"></td>
 				<td th:text="${sale.status}"></td>
 				<td th:text="${sale.totalValue}"></td>
+				<td>
+					<form th:action="@{/manager/edit/{id}(id=${sale.id})}" method="get">
+						<button title="Edit">
+							<span class="material-icons">edit</span>
+						</button>
+					</form>
+					
+				</td>
+				<td>
+					<form th:action="@{/manager/delete/{id}(id=${sale.id})}" method="post" onsubmit="return confirm('Are you sure that you want delete?')">
+						<button type="submit" title="Delete">
+							<span class="material-icons">delete</span>
+						</button>
+					</form>
+				</td>
 			</tr>
 		</table>
 	</main>

@@ -149,6 +149,14 @@ public class SaleServiceImpl implements SaleService {
 		return generatedRequestNumber;
 	}
 	
+	@Override
+	public void deleteSaleById(Long id) {
+		
+		saleRepository.deleteById(id);
+		
+		msg = "Deleted successfully!";
+	}
+	
 	public String getMsg() {
 		return msg;
 	}

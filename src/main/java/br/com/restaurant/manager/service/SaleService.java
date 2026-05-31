@@ -23,4 +23,6 @@ public interface SaleService {
 	String getTotalPriceItem();
 	
 	String getTotalPriceSale();
+	
+	void deleteSaleById(Long id);
 }
