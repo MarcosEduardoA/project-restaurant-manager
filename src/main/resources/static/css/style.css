@@ -11,6 +11,7 @@
 	--color3: #592B1B;
 	--color4: #8C5845;
 	--color5: #783a25;
+	--color6: #00d921;
 	
 	--default-font: 'Open Sans', Arial, sans-serif;
 	--highlight-font: 'Playfair Display';
@@ -165,6 +166,31 @@ nav a:hover {
 	background-color: var(--color1);
 	color: var(--color4);
 }
+
+.toast-container {
+	position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: var(--color5);
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-width: 250px;
+    animation: fadeOut 5s forwards;
+}
+
+.toast-container.success {
+	background-color: var(--color6);
+}
+
+@keyframes fadeOut {
+	0% { opacity: 0; transform: translateY(-20px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}	
 
 #items-label {
 	margin-bottom: 20px;

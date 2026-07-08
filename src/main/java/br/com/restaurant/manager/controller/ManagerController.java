@@ -51,7 +51,10 @@ public class ManagerController {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
-		modelAndView.addObject("sale", new Sale());
+		Sale newSale = new Sale();
+		saleService.setCurrentDateSale(newSale);
+		
+		modelAndView.addObject("sale", newSale);
 		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		modelAndView.addObject("item", new Item());
@@ -117,7 +120,6 @@ public class ManagerController {
 		modelAndView.addObject("sale", saleUpdate); // Limpa o objeto de venda
 		modelAndView.addObject("totalPrice", "R$ " + saleUpdate.getTotalValue()); // Pega o valor total de Sale
 		modelAndView.addObject("item", new Item()); // Cria um novo Item
-		modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
 		modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
 		modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
 		modelAndView.addObject("sales", saleRepository.findAll());
@@ -135,7 +137,6 @@ public class ManagerController {
 		modelAndView.addObject("sale", sale); 
 		modelAndView.addObject("totalPriceItem", saleService.getTotalPriceItem());
 		modelAndView.addObject("item", new Item());
-		modelAndView.addObject("msg", saleService.getMsg());
 		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		modelAndView.addObject("sales", saleRepository.findAll());
@@ -150,7 +151,10 @@ public class ManagerController {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
-		modelAndView.addObject("sale", new Sale());
+		Sale newSale = new Sale();
+		saleService.setCurrentDateSale(newSale);
+		
+		modelAndView.addObject("sale", newSale);
 		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
 		modelAndView.addObject("sales", saleRepository.findAll());

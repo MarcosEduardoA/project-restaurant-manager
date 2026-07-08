@@ -25,8 +25,8 @@
 		<a href="discount-manager">Discount</a>
 	</nav>
 	
-	<div>
-		<span th:text="${msg}" class="msg"></span>
+	<div th:if="${msg}" class="toast-container success">
+		<p th:text="${msg}"></p>
 	</div>
 	
 	<main id="main-sale">
@@ -57,8 +57,11 @@
 			<input type="hidden" th:field="*{id}" />
 			
 			<div class="row">
-				<label for="requestNumber" class="label-default">Request Number:</label>
-				<input id="requestNumber" name="requestNumber" class="input-default" th:field="*{requestNumber}" type="text" readonly="readonly">
+			
+				<th:block th:if="*{requestNumber != null and requestNumber != ''}">
+					<label for="requestNumber" class="label-default">Request Number:</label>
+					<input id="requestNumber" name="requestNumber" class="input-default" th:field="*{requestNumber}" type="text" readonly="readonly">
+				</th:block>
 			
 				<label for="saleDate" class="label-default">Sale Date:</label>
 				<input id="saleDate" name="saleDate" class="input-default" th:field="*{saleDate}" type="date" readonly="readonly">

@@ -2,7 +2,6 @@ package br.com.restaurant.manager.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Random;
 import br.com.restaurant.manager.utilities.SaleMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import br.com.restaurant.manager.repository.SaleRepository;
 @Service
 public class SaleServiceImpl implements SaleService {
 
-    private final SaleMapperImpl saleMapperImpl;
 
 	private final SaleRepository saleRepository;
 	
@@ -34,7 +32,6 @@ public class SaleServiceImpl implements SaleService {
 	
 	public SaleServiceImpl(SaleRepository saleRepository, SaleMapperImpl saleMapperImpl) {
 		this.saleRepository = saleRepository;
-		this.saleMapperImpl = saleMapperImpl;
 	}
 	
 	@Override
@@ -48,7 +45,7 @@ public class SaleServiceImpl implements SaleService {
 			
 			saleToSave.setRequestNumber(generateSaleNumber());
 			
-			saleToSave.setSaleDate(LocalDate.now());
+			setCurrentDateSale(saleToSave);
 		}
 		else{
 			
@@ -159,6 +156,11 @@ public class SaleServiceImpl implements SaleService {
 		saleRepository.deleteById(id);
 		
 		msg = "Deleted successfully!";
+	}
+	
+	@Override
+	public void setCurrentDateSale(Sale sale) {
+		sale.setSaleDate(LocalDate.now());
 	}
 	
 	public String getMsg() {

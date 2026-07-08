@@ -25,4 +25,6 @@ public interface SaleService {
 	String getTotalPriceSale();
 	
 	void deleteSaleById(Long id);
+	
+	void setCurrentDateSale(Sale sale);
 }
