@@ -1,13 +1,15 @@
 package br.com.restaurant.manager.controller;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -59,19 +61,47 @@ public class ManagerController {
 	}
 	
 	@PostMapping("save-sale")
-	public ModelAndView save(@ModelAttribute("sale") Sale sale) throws Exception {
-		
-		Sale savedSale = saleService.createSale(sale);   // Salva a venda
+	public ModelAndView save(@ModelAttribute("sale") Sale sale, @RequestParam("action") String action) throws Exception {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager"); // Redireciona para a edição do Sale salvo
 		
-		modelAndView.addObject("sale", new Sale()); // Limpa o objeto de venda
-		modelAndView.addObject("totalPrice", "R$ " + 0.00); // Pega o valor total de Sale
-		modelAndView.addObject("item", new Item()); // Cria um novo Item
-		modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
-		modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
-		modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
-		modelAndView.addObject("sales", saleRepository.findAll());
+		if (action.equals("save")) {
+			saleService.createSale(sale);
+			
+			modelAndView.addObject("sale", new Sale()); // Limpa o objeto de venda
+			modelAndView.addObject("totalPrice", "R$ " + sale.getTotalValue()); // Pega o valor total de Sale
+			modelAndView.addObject("item", new Item()); // Cria um novo Item
+			modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
+			modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
+			modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
+			modelAndView.addObject("sales", saleRepository.findAll());
+			
+			
+			return modelAndView;
+		}
+		else if (action.startsWith("remove-")) {
+			
+			int index = Integer.parseInt(action.split("-")[1]);
+			
+			if (sale.getItems() != null && index >= 0 && index < sale.getItems().size()) {
+				sale.getItems().remove(index);
+			}
+			
+			BigDecimal total = BigDecimal.ZERO;
+			for (Item i : sale.getItems()) {
+				total = total.add(i.getTotalPrice());
+			}
+			
+			modelAndView.addObject("sale", sale); // Limpa o objeto de venda
+			modelAndView.addObject("totalPrice", "R$ " + total); // Pega o valor total de Sale
+			modelAndView.addObject("item", new Item()); // Cria um novo Item
+			modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
+			modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
+			modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
+			modelAndView.addObject("sales", saleRepository.findAll());
+			
+			return modelAndView;
+		}
 		
 		return modelAndView;
 	}
@@ -95,18 +125,20 @@ public class ManagerController {
 		return modelAndView;
 	}
 	
-	@PostMapping("add-item")
+	@PostMapping("/add-item")
 	public ModelAndView addItem(@ModelAttribute("item") Item item, 
 			@ModelAttribute("sale") Sale sale) {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
 		
 		saleService.addItem(sale, item);
+		modelAndView.addObject("sale", sale); 
 		modelAndView.addObject("totalPriceItem", saleService.getTotalPriceItem());
 		modelAndView.addObject("item", new Item());
 		modelAndView.addObject("msg", saleService.getMsg());
 		modelAndView.addObject("dishes", dishService.loadDishes());
 		modelAndView.addObject("discounts", discountRepository.findAll());
+		modelAndView.addObject("sales", saleRepository.findAll());
 		return modelAndView;
 		
 	}

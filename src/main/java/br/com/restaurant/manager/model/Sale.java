@@ -99,6 +99,11 @@ public class Sale implements Serializable {
 	
 	public void setItems(List<Item> items) {
 		this.items = items;
+		
+		if (items != null) {
+			items.forEach(item -> item.setSale(this));
+		}
+		
 	}
 	
 	public LocalDate getSaleDate() {

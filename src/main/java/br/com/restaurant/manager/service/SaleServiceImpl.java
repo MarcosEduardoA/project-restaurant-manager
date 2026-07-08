@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Random;
-
+import br.com.restaurant.manager.utilities.SaleMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,18 +15,16 @@ import br.com.restaurant.manager.model.Item;
 import br.com.restaurant.manager.model.Sale;
 import br.com.restaurant.manager.repository.ProductRepository;
 import br.com.restaurant.manager.repository.SaleRepository;
-import br.com.restaurant.manager.utilities.SaleMapper;
 
 @Service
 public class SaleServiceImpl implements SaleService {
+
+    private final SaleMapperImpl saleMapperImpl;
 
 	private final SaleRepository saleRepository;
 	
 	@Autowired
 	private ProductRepository productRepository;
-	
-	@Autowired
-	private SaleMapper saleMapper;
 	
 	private String msg;
 	
@@ -34,8 +32,9 @@ public class SaleServiceImpl implements SaleService {
 	
 	private String totalPriceSale;
 	
-	public SaleServiceImpl(SaleRepository saleRepository) {
+	public SaleServiceImpl(SaleRepository saleRepository, SaleMapperImpl saleMapperImpl) {
 		this.saleRepository = saleRepository;
+		this.saleMapperImpl = saleMapperImpl;
 	}
 	
 	@Override
@@ -46,12 +45,14 @@ public class SaleServiceImpl implements SaleService {
 		
 		if (sale.getId() == null) {
 			saleToSave = sale;
+			
 			saleToSave.setRequestNumber(generateSaleNumber());
+			
 			saleToSave.setSaleDate(LocalDate.now());
 		}
 		else{
-			saleToSave = saleRepository.findById(sale.getId()).orElse(new Sale());
-			saleMapper.updateSale(sale, saleToSave); // Passa o Sale recebido do banco para o Sale que será salvo (atualizado)
+			
+			saleToSave = sale;
 			
 			BigDecimal total = calculateTotal(saleToSave); // Calcula o valor total de Sale
 			saleToSave.setTotalValue(total);
@@ -96,9 +97,12 @@ public class SaleServiceImpl implements SaleService {
 	@Override
 	public BigDecimal calculateTotal(Sale sale) { // Calcula o valor total de Sale
 		
-		// Pega o valor total somado de todos os items
-		BigDecimal total = sale.getItems().stream().map(Item::getTotalPrice)
-				.filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+		BigDecimal total = BigDecimal.ZERO;
+		for (Item i : sale.getItems()) {
+			
+			BigDecimal itemTotal = total.add(i.getUnitPrice().multiply(BigDecimal.valueOf(i.getQuantity())));
+			total = itemTotal;
+		}
 		
 		if (sale.getDiscount() != null) {
 			total = applyDiscount(total, sale.getDiscount());
