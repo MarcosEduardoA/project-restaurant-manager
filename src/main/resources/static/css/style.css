@@ -167,6 +167,28 @@ nav a:hover {
 	color: var(--color4);
 }
 
+.pagination-container {
+	display: flex;
+	justify-content: center;
+	margin: 15px;
+	gap: 5px;
+}
+
+.pagination-link {
+	text-decoration: none;
+	color: white;
+	background-color: var(--color3);
+	border: 1px solid var(--color3);
+	border-radius: 4px;
+	padding: 5px;
+}
+
+.pagination-link:hover {
+	background-color: var(--color2);
+	color: var(--color3);
+	border-color: var(--color2);
+}
+
 .toast-container {
 	position: fixed;
     bottom: 20px;

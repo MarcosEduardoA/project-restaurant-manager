@@ -165,7 +165,7 @@
 					<th>Delete</th>
 				</tr>
 			</thead>
-			<tr th:each="sale : ${sales}" id="tr-sale">
+			<tr th:each="sale : ${salesPage}" id="tr-sale">
 				<td th:text="${sale.id}"></td>
 				<td th:text="${sale.requestNumber}"></td>
 				<td th:text="${sale.saleDate}"></td>
@@ -188,6 +188,13 @@
 				</td>
 			</tr>
 		</table>
+		<div th:if="${salesPage.totalPages > 0}" class="pagination-container">
+				<a th:each="pageNumber : ${pageNumbers}"
+					th:href="@{/manager/sale-manager(page=${pageNumber}, size=${salesPage.size})}"
+					th:text="${pageNumber}"
+					class="pagination-link">
+				</a>
+			</div>
 	</main>
 	
 </body>

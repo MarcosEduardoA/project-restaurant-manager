@@ -27,4 +27,5 @@ public interface SaleService {
 	void deleteSaleById(Long id);
 	
 	void setCurrentDateSale(Sale sale);
+	
 }
