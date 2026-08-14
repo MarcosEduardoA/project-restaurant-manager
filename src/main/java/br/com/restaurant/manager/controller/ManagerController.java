@@ -1,6 +1,7 @@
 package br.com.restaurant.manager.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,8 +57,7 @@ public class ManagerController {
 	}
 	
 	@GetMapping("/sale-manager")
-	public ModelAndView init(@ModelAttribute("sale") Sale sale, 
-			@RequestParam(defaultValue = "1") int page,
+	public ModelAndView init(@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "10") int size) {
 		
 		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
@@ -83,10 +86,6 @@ public class ManagerController {
 			modelAndView.addObject("item", new Item()); // Cria um novo Item
 			modelAndView.addObject("msg", saleService.getMsg()); // Emite a mensagem de sucesso
 			loadCommonData(modelAndView, page, size);
-			//modelAndView.addObject("dishes", dishService.loadDishes()); // Carrega todos os pratos
-			//modelAndView.addObject("discounts", discountRepository.findAll()); // Carrega todos os descontos
-			//modelAndView.addObject("sales", saleRepository.findAll());
-			
 			
 			return modelAndView;
 		}
@@ -187,15 +186,59 @@ public class ManagerController {
 		return modelAndView;
 	}
 	
-	public void loadCommonData(ModelAndView mv, int page, int size) {
-		Pageable pageable = PageRequest.of(page - 1, size);
-		Page<Sale> salePage = saleRepository.findAll(pageable);
+	@GetMapping("/filterByDate")
+	public ModelAndView filterByDate(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(required = false)@DateTimeFormat(iso = ISO.DATE)LocalDate startDate,
+			@RequestParam(required = false)@DateTimeFormat(iso = ISO.DATE)LocalDate endDate) {
 		
+		ModelAndView modelAndView = new ModelAndView("manager/sale-manager");
+		
+		if (startDate != null && endDate != null && !endDate.isBefore(startDate)) {
+			loadCommonData(modelAndView, page, size, startDate, endDate);
+			modelAndView.addObject("sale", new Sale());
+			modelAndView.addObject("item", new Item());
+			modelAndView.addObject("startDate", startDate);
+			modelAndView.addObject("endDate", endDate);
+		} else {
+			loadCommonData(modelAndView, page, size);
+			modelAndView.addObject("sale", new Sale());
+			modelAndView.addObject("item", new Item());
+			//modelAndView.addObject("msg", "Informe corretamente a data de início e fim!");
+		}
+		
+		return modelAndView;
+	}
+	
+	public void loadCommonData(ModelAndView mv, int page, int size, LocalDate startDate, LocalDate endDate) {
+		
+		// Objeto de paginacao
+		Pageable pageable = PageRequest.of(page - 1, 
+				size,
+				// Ordena a lista pela data mais atual
+				// Sort.Direction.DESC indica ordem decrescente
+				// saleDate corresponde ao atributo de Sale
+				Sort.by(Sort.Direction.DESC, "saleDate")
+				);
+		
+		// Busca paginada
+		Page<Sale> salePage;
+		
+		if (startDate != null && endDate != null) {
+			salePage = saleRepository.findBySaleDateBetween(startDate, endDate, pageable);
+		} else {
+			salePage = saleRepository.findAll(pageable);
+		}
+		
+		// Objetos comuns, muito utilizados
 		mv.addObject("salesPage", salePage);
 		mv.addObject("dishes", dishService.loadDishes());
 		mv.addObject("discounts", discountRepository.findAll());
 		
+		// Total de paginas
 		int totalPages = salePage.getTotalPages();
+		
+		// Cria uma lista de numeros para renderizar os botoes da paginacao
 		if (totalPages > 0) {
 			List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
 					.boxed()
@@ -203,6 +246,11 @@ public class ManagerController {
 			mv.addObject("pageNumbers", pageNumbers);
 		}
 		
+	}
+	
+	// Mantem compatibilidade com funcoes que nao informam startDate e endDate
+	public void loadCommonData(ModelAndView mv, int page, int size) {
+		loadCommonData(mv, page, size, null, null);
 	}
 	
 	public SaleRepository getSaleRepository() {

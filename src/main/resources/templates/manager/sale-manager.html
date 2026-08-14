@@ -67,8 +67,8 @@
 				<input id="saleDate" name="saleDate" class="input-default" th:field="*{saleDate}" type="date" readonly="readonly">
 			</div>
 			
-			<div class="row">
 			
+			<div class="row">
 				<h3 id="items-label">Items:</h3>
 				<table>
 					<thead>
@@ -153,7 +153,13 @@
 			 
 		</form>
 		
+		<form th:action="@{/manager/filterByDate}" method="get">
+			<input id="startDate" name="startDate" th:value="${#temporals.format(startDate, 'yyyy-MM-dd')}" type="date" style="margin-left: 250px;">
+			<input id="endDate" name="endDate" th:value="${#temporals.format(endDate, 'yyyy-MM-dd')}"  type="date" style="margin-left: 10px;">
+			<button style="margin-left: 10px;" type="submit">Filter</button>
+		</form>
 		<table id="table-sales">
+			
 			<thead>
 				<tr>
 					<th>ID</th>
@@ -190,7 +196,7 @@
 		</table>
 		<div th:if="${salesPage.totalPages > 0}" class="pagination-container">
 				<a th:each="pageNumber : ${pageNumbers}"
-					th:href="@{/manager/sale-manager(page=${pageNumber}, size=${salesPage.size})}"
+					th:href="@{/manager/filterByDate(page=${pageNumber}, size=${salesPage.size}, startDate=${startDate}, endDate=${endDate})}"
 					th:text="${pageNumber}"
 					class="pagination-link">
 				</a>
