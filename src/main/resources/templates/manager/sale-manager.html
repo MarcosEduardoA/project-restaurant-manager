@@ -154,9 +154,15 @@
 		</form>
 		
 		<form th:action="@{/manager/filterByDate}" method="get">
-			<input id="startDate" name="startDate" th:value="${#temporals.format(startDate, 'yyyy-MM-dd')}" type="date" style="margin-left: 250px;">
-			<input id="endDate" name="endDate" th:value="${#temporals.format(endDate, 'yyyy-MM-dd')}"  type="date" style="margin-left: 10px;">
-			<button style="margin-left: 10px;" type="submit">Filter</button>
+			<div id="filter-date">
+				<label class="label-filter-date">Start date:</label>
+				<input id="startDate" name="startDate" th:value="${#temporals.format(startDate, 'yyyy-MM-dd')}" type="date" class="input-filter-date">
+				
+				<label class="label-filter-date">End date:</label>
+				<input id="endDate" name="endDate" th:value="${#temporals.format(endDate, 'yyyy-MM-dd')}"  type="date" class="input-filter-date">
+				
+				<button id="button-filter-date" type="submit">Filter</button>
+			</div>
 		</form>
 		<table id="table-sales">
 			

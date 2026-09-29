@@ -218,7 +218,8 @@ public class ManagerController {
 				// Ordena a lista pela data mais atual
 				// Sort.Direction.DESC indica ordem decrescente
 				// saleDate corresponde ao atributo de Sale
-				Sort.by(Sort.Direction.DESC, "saleDate")
+				Sort.by(Sort.Order.desc("saleDate"),
+						Sort.Order.desc("id"))
 				);
 		
 		// Busca paginada
@@ -227,7 +228,9 @@ public class ManagerController {
 		if (startDate != null && endDate != null) {
 			salePage = saleRepository.findBySaleDateBetween(startDate, endDate, pageable);
 		} else {
-			salePage = saleRepository.findAll(pageable);
+			LocalDate today = LocalDate.now();
+			
+			salePage = saleRepository.findBySaleDate(today, pageable);
 		}
 		
 		// Objetos comuns, muito utilizados

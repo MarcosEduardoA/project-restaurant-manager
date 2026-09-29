@@ -126,6 +126,13 @@ nav a:hover {
 	border-width: 0.2em;
 }
 
+#list-empty-td {
+	text-align: center;
+	padding: 10px;
+	border: 1px dashed #d2b48c;
+	background-color: #fffaf0;
+}
+
 .totalPrice {
 	padding: 10px;
 	font-weight: bolder;
@@ -246,10 +253,50 @@ i button {
 	background-color: red;
 }
 
+#filter-date {
+	background-color: #fff;
+	min-width: 70%;
+	width: 70%;
+	margin: 0 auto;
+	text-align: left;
+	border-radius: 5px 5px 0px 0px;
+}
+
+.label-filter-date {
+	margin-left: 10px;
+	font-style: bolder;
+	font-family: "Verdana", sans-serif;
+	color: var(--color3);
+}
+
+.input-filter-date {
+	padding: 10px 15px;
+	margin: 15px 15px 15px 0px;
+	border-color: var(--color3);
+	border-style: solid;
+	border-radius: 3px;
+}
+
+#button-filter-date {
+	background-color: var(--color2);
+	color: white;
+	font-weight: bolder;
+	margin-left: 5px;
+	border-radius: 5px;
+	padding: 10px 20px;
+	border-color: transparent;
+	cursor: pointer;
+}
+
+#button-filter-date:hover {
+	background-color: var(--color1);
+	color: var(--color4);
+}
+
 #table-sales {
 	min-width: 70%;
 	background-color: white;
-	border-radius: 5px;
+	border-radius: 0px 0px 5px 5px;
 	padding: 20px;
 	margin: auto;
 	margin-bottom: 20px;
@@ -259,9 +306,4 @@ i button {
 	text-align: center;
 }
 
-#list-empty-td {
-	text-align: center;
-	padding: 10px;
-	border: 1px dashed #d2b48c;
-	background-color: #fffaf0;
-}
+

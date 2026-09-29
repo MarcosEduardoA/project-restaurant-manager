@@ -16,4 +16,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 	
 	Page<Sale> findBySaleDateBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
 	
+	Page<Sale> findBySaleDate(LocalDate saleDate, Pageable pageable);
+	
 }
